@@ -1,0 +1,51 @@
+import random
+
+# Words from different categories with hints
+words_with_hints = {
+    "cricket": "🏏 A popular outdoor sport with bat and ball",
+    "apple": "🍎 A red or green fruit",
+    "tiger": "🐅 A big striped wild cat",
+    "pakistan": "🌍 A country in South Asia",
+    "python": "💻 A popular programming language"
+}
+
+# Randomly choose a word and hint
+word, hint = random.choice(list(words_with_hints.items()))
+guessed_word = ["_"] * len(word)
+attempts = 6
+guessed_letters = []
+
+print("🎮 Welcome to Hangman!")
+print(f"Hint: {hint}")  # show hint
+print("Guess the word:", " ".join(guessed_word))
+
+# Main game loop
+while attempts > 0 and "_" in guessed_word:
+    guess = input("\nEnter a letter: ").lower()
+
+    # Already guessed check
+    if guess in guessed_letters:
+        print("❗ You already guessed that letter.")
+        continue
+
+    guessed_letters.append(guess)
+
+    # Correct guess
+    if guess in word:
+        print("✅ Correct!")
+        for i in range(len(word)):
+            if word[i] == guess:
+                guessed_word[i] = guess
+    else:
+        attempts -= 1
+        print(f"❌ Wrong! Attempts left: {attempts}")
+
+    # Show progress + guessed letters
+    print(" ".join(guessed_word))
+    print("Guessed so far:", ", ".join(guessed_letters))
+
+# Win/Lose result
+if "_" not in guessed_word:
+    print("\n🎉 Congratulations! You guessed the word:", word)
+else:
+    print("\n💀 Game Over! The word was:", word)
