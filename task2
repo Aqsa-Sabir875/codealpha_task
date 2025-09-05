@@ -1,0 +1,63 @@
+import csv
+
+# Hardcoded stock prices (you can add more if you want)
+stock_prices = {
+    "AAPL": 180,
+    "TSLA": 250,
+    "GOOGL": 135,
+    "AMZN": 140,
+    "MSFT": 310
+}
+
+print("📊 Welcome to Stock Portfolio Tracker 📊")
+print("Available stocks:", ", ".join(stock_prices.keys()))
+
+# User input for portfolio
+portfolio = {}
+while True:
+    stock = input("\nEnter stock symbol (or 'done' to finish): ").upper()
+    if stock == "DONE":
+        break
+    if stock in stock_prices:
+        quantity = int(input(f"Enter quantity of {stock}: "))
+        portfolio[stock] = portfolio.get(stock, 0) + quantity
+    else:
+        print("❌ Stock not found in price list!")
+
+# Calculate total investment
+total_value = 0
+lines = []
+for stock, qty in portfolio.items():
+    value = qty * stock_prices[stock]
+    lines.append(f"{stock}: {qty} shares × ${stock_prices[stock]} = ${value}")
+    total_value += value
+
+# Display portfolio
+print("\n✅ Your Portfolio:")
+for line in lines:
+    print(line)
+print(f"\n💰 Total Investment Value = ${total_value}")
+
+# Save to file (optional)
+choice = input("\nDo you want to save the result? (y/n): ").lower()
+if choice == "y":
+    file_type = input("Save as (txt/csv): ").lower()
+
+    if file_type == "txt":
+        with open("portfolio.txt", "w") as f:
+            for line in lines:
+                f.write(line + "\n")
+            f.write(f"\nTotal Investment = ${total_value}\n")
+        print("✅ Saved to portfolio.txt")
+
+    elif file_type == "csv":
+        with open("portfolio.csv", "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["Stock", "Quantity", "Price", "Value"])
+            for stock, qty in portfolio.items():
+                writer.writerow([stock, qty, stock_prices[stock], qty * stock_prices[stock]])
+            writer.writerow(["Total", "", "", total_value])
+        print("✅ Saved to portfolio.csv")
+
+    else:
+        print("❌ Invalid file type. Skipping save.")
