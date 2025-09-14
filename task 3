@@ -1,0 +1,40 @@
+import os
+import shutil
+
+# 1. Current script ka folder le rahe hain
+base_folder = os.path.dirname(os.path.abspath(__file__))
+
+# 2. Source folder (jahaan humari image files hain)
+source_folder = base_folder
+
+# 3. Destination folder (jahaan images ko move karna hai)
+destination_folder = os.path.join(base_folder, "Image_Files")
+
+# 4. Agar destination folder exist nahi karta, to create kar do
+if not os.path.exists(destination_folder):
+    os.makedirs(destination_folder)
+
+# 5. Allowed image extensions
+image_extensions = (".jpg", ".jpeg", ".png", ".gif")
+
+# 6. List to track moved files
+moved_files = []
+
+# 7. Loop: har file ko check karo
+for file in os.listdir(source_folder):
+    if file.lower().endswith(image_extensions):  # agar file image hai
+        old_path = os.path.join(source_folder, file)
+        new_path = os.path.join(destination_folder, file)
+
+        shutil.move(old_path, new_path)  # move file
+        moved_files.append((file, source_folder, destination_folder))
+
+# 8. Output
+if moved_files:
+    print("\n✅ Files moved successfully:\n")
+    for file, old, new in moved_files:
+        print(f"📂 {file} moved FROM: {old}  --->  TO: {new}")
+
+    print(f"\n📊 Total image files moved: {len(moved_files)}")
+else:
+    print("⚠️ No image files (.jpg, .jpeg, .png, .gif) found to move!")
